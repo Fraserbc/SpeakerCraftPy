@@ -86,7 +86,7 @@ class Controller():
 		self.send(data)
 	
 	# Emulate a button press
-	def button_press(self, zone_id, address=0x00, source_id, key_id):
+	def button_press(self, zone_id, source_id, key_id, address=0x00):
 		# Build the command
 		data = bytearray(0x55, 0x07, 0x52, zone_id-1, address-1 if address > 0 else 0, source_id-1, key_id-1)
 
@@ -94,7 +94,7 @@ class Controller():
 		self.send(data)
 	
 	# Set the audio level
-	def audio_level(self, action, volume=0, zone_id):
+	def audio_level(self, action, zone_id, volume=0):
 		# Check if the action is valid
 		if action not in [VOL_DOWN, VOL_UP, VOL_LVL, MUTE_TOG, MUTE_OFF, MUTE_ON]:
 			raise BaseException("action must be one of these actions VOL_DOWN, VOL_UP, VOL_LVL, MUTE_TOG, MUTE_OFF, MUTE_ON")
