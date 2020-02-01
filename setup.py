@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name="SpeakerCraftPy",
-    packages = ['SpeakerCraft']
+    packages = ['SpeakerCraft'],
     version="0.1",
     license="MIT",
     author="Fraser Price",
