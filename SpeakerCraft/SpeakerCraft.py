@@ -18,7 +18,7 @@ class Controller():
 		self.control_port = serial.Serial(dev, 57600)
 	
 	# The checksum on the end of the payload
-	def simple_checksum(data):
+	def simple_checksum(self, data):
 		return 0x100 - (sum(data) & 0xFF)
 	
 	# Send the data to the Controller
