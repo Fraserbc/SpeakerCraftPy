@@ -36,7 +36,7 @@ class Controller():
 	# Turn a zone on
 	def zone_on(self, zone_id):
 		# Build the command
-		data = bytearray(0x55, 0x04, 0xA0, zone_id-1)
+		data = bytearray([0x55, 0x04, 0xA0, zone_id-1])
 
 		# Send the data
 		self.send(data)
@@ -44,7 +44,7 @@ class Controller():
 	# Turn a zone off
 	def zone_off(self, zone_id):
 		# Build the command
-		data = bytearray(0x55, 0x04, 0xA1, zone_id-1)
+		data = bytearray([0x55, 0x04, 0xA1, zone_id-1])
 
 		# Send the data
 		self.send(data)
@@ -60,7 +60,7 @@ class Controller():
 			raise BaseException("party_state must be PARTY_ON or PARTY_OFF")
 
 		# Build the command
-		data = bytearray(0x55, 0x05, 0xA2, party_state, zone_id-1)
+		data = bytearray([0x55, 0x05, 0xA2, party_state, zone_id-1])
 
 		# Send the data
 		self.send(data)
@@ -68,7 +68,7 @@ class Controller():
 	# Select the source
 	def select_source(self, source_id, zone_id):
 		# Build the command
-		data = bytearray(0x55, 0x05, 0xA2, zone_id-1, source_id-1)
+		data = bytearray([0x55, 0x05, 0xA2, zone_id-1, source_id-1])
 
 		# Send the data
 		self.send(data)
@@ -80,7 +80,7 @@ class Controller():
 			raise BaseException("tone must be BASS or TREBLE")
 
 		# Build the command
-		data = bytearray(0x55, 0x06, 0xA4, zone_id-1, tone, (tone_level % 0xFF) + 0x01)
+		data = bytearray([0x55, 0x06, 0xA4, zone_id-1, tone, (tone_level % 0xFF) + 0x01])
 
 		# Send the data
 		self.send(data)
@@ -88,7 +88,7 @@ class Controller():
 	# Emulate a button press
 	def button_press(self, zone_id, source_id, key_id, address=0x00):
 		# Build the command
-		data = bytearray(0x55, 0x07, 0x52, zone_id-1, address-1 if address > 0 else 0, source_id-1, key_id-1)
+		data = bytearray([0x55, 0x07, 0x52, zone_id-1, address-1 if address > 0 else 0, source_id-1, key_id-1])
 
 		# Send the data
 		self.send(data)
@@ -104,7 +104,7 @@ class Controller():
 			raise BaseException("volume must be one of these values 0-44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80")
 
 		# Build the command
-		data = bytearray(0x55, 0x08, 0x57, 0x00, 0x00, action, volume, zone_id-1)
+		data = bytearray([0x55, 0x08, 0x57, 0x00, 0x00, action, volume, zone_id-1])
 
 		# Send the data
 		self.send(data)
