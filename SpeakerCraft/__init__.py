@@ -1,2 +1,2 @@
 # Import the SpeakerCraft library
-from SpeakerCraft import *
+from SpeakerCraft.SpeakerCraft import *

@@ -3,7 +3,7 @@ import setuptools
 setuptools.setup(
     name="SpeakerCraftPy",
     packages = ['SpeakerCraft'],
-    version="0.2",
+    version="0.3",
     license="MIT",
     author="Fraser Price",
     author_email="fraserbcprice@gmail.com",
