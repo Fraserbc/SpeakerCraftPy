@@ -28,7 +28,7 @@ class Controller():
 
 		# Wait until the command window open
 		while True:
-			if self.control_port.read() == '\x11':
+			if self.control_port.read() == b'\x11':
 				# Send the data
 				self.control_port.write(data)
 				break
