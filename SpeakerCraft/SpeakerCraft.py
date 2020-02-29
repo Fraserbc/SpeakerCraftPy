@@ -19,7 +19,12 @@ class Controller():
 	
 	# The checksum on the end of the payload
 	def simple_checksum(self, data):
-		return 0x100 - (sum(data) & 0xFF)
+		checksum = sum(data)
+		
+		while checksum > 256:
+				checksum -= 256
+		
+		return 0x100 - checksum
 	
 	# Send the data to the Controller
 	def send(self, data):
@@ -28,7 +33,10 @@ class Controller():
 
 		# Wait until the command window open
 		while True:
-			if self.control_port.read() == b'\x11':
+			# Reset the input buffer so we get what is right now
+			self.control_port.reset_input_buffer()
+
+			if self.control_port.read(1) == b'\x11':
 				# Send the data
 				self.control_port.write(data)
 				break
