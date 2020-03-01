@@ -1,4 +1,5 @@
 import serial
+import struct
 
 # Definitions
 PARTY_OFF = 0x00
@@ -11,6 +12,19 @@ MUTE_TOG = 	0x02
 MUTE_OFF = 	0x03
 MUTE_ON = 	0x04
 VOL_LVL = 	0x05
+
+class Zone():
+	source_id = None
+	bass = None
+	treble = None
+
+	vol_percent = None
+	vol_actual = None
+
+	muted = None
+	status = None
+	mode = None
+	party_mode = None
 
 class Controller():
 	# Init
@@ -40,6 +54,18 @@ class Controller():
 				# Send the data
 				self.control_port.write(data)
 				break
+		
+		# Get the response from the controller
+		response = bytearray()
+		while True:
+			x = self.control_port.read(1)
+
+			if x == b'\x13':
+				break
+			
+			response.append(x)
+		
+		return response
 	
 	# Turn a zone on
 	def zone_on(self, zone_id):
@@ -88,7 +114,7 @@ class Controller():
 			raise BaseException("tone must be BASS or TREBLE")
 
 		# Build the command
-		data = bytearray([0x55, 0x06, 0xA4, zone_id-1, tone, (tone_level % 0xFF) + 0x01])
+		data = bytearray([0x55, 0x06, 0xA4, zone_id-1, tone, struct.pack('b', tone_level)])
 
 		# Send the data
 		self.send(data)
@@ -102,7 +128,7 @@ class Controller():
 		self.send(data)
 	
 	# Set the audio level
-	def audio_level(self, action, zone_id, volume=0):
+	def audio_level(self, zone_id, action=VOL_LVL, volume=0):
 		# Check if the action is valid
 		if action not in [VOL_DOWN, VOL_UP, VOL_LVL, MUTE_TOG, MUTE_OFF, MUTE_ON]:
 			raise BaseException("action must be one of these actions VOL_DOWN, VOL_UP, VOL_LVL, MUTE_TOG, MUTE_OFF, MUTE_ON")
@@ -116,3 +142,30 @@ class Controller():
 
 		# Send the data
 		self.send(data)
+	
+	def zone_info(self, zone_id):
+		# Build the command
+		data = bytearray([0x55, 0x04, 0x69, zone_id-1])
+
+		# Send the data and parse the response
+		res = self.send(data)
+
+		# Parse
+		flags = res[7]
+		
+		zone = Zone()
+
+		zone.sourceId = res[8]
+		zone.bass = struct.unpack('b', res[10])
+		zone.treble = struct.unpack('b', res[11])
+
+		zone.vol_percent = res[8]
+		zone.vol_actual = res[12]
+
+		# Parse the flags
+		zone.muted = (flags >> 0) & 0x01
+		zone.status = (flags >> 1) & 0x01
+		zone.mode = (flags >> 3) & 0x01
+		zone.party_mode = (flags >> 4) & 0x01
+		
+		return zone
