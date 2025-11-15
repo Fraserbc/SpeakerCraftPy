@@ -63,7 +63,7 @@ class Controller():
 			if x == b'\x13':
 				break
 			
-			response.append(x)
+			response.append(x[0])
 		
 		return response
 	
