@@ -102,7 +102,7 @@ class Controller():
 	# Select the source
 	def select_source(self, source_id, zone_id):
 		# Build the command
-		data = bytearray([0x55, 0x05, 0xA2, zone_id-1, source_id-1])
+		data = bytearray([0x55, 0x05, 0xA3, zone_id-1, source_id-1])
 
 		# Send the data
 		self.send(data)
